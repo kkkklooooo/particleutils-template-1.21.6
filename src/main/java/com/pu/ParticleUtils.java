@@ -3,6 +3,7 @@ package com.pu;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -29,58 +30,85 @@ public class ParticleUtils implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+        // This code runs as soon as Minecraft is in a mod-load-ready state.
+        // However, some things (like resources) may still be uninitialized.
+        // Proceed with mild caution.
 
-		LOGGER.info("Hello Fabric world!");
-
-
-		CommandRegistrationCallback.EVENT.register((d,r,e)->{
-			d.register(CommandManager.literal("line")
-
-							.then(CommandManager.argument("StartPosX", FloatArgumentType.floatArg())
-					.then(CommandManager.argument("StartPosY", FloatArgumentType.floatArg())
-					.then(CommandManager.argument("StartPosZ", FloatArgumentType.floatArg())
-							.then(CommandManager.argument("Length",FloatArgumentType.floatArg())
-					.executes(ctx->{
-
-						float x = FloatArgumentType.getFloat(ctx,"StartPosX");
-						float y = FloatArgumentType.getFloat(ctx,"StartPosY");
-						float z = FloatArgumentType.getFloat(ctx,"StartPosZ");
-						float l = FloatArgumentType.getFloat(ctx,"Length");
-						//ctx.getSource().getDispatcher().execute("tp %s %s %s".formatted(x,y,z),ctx.getSource());
-						String c = DrawLine(100,100,100,0,0,0,1000);
-						//ParticleUtils.LOGGER.warn(c);
-						c+=DrawCircle(1,1,1,5,1000,new Vector3(0,0,1));
-						//ParticleUtils.LOGGER.warn(c);
-						ExecuteMultiLineAsync(c,ctx.getSource(),2);
-
-				ctx.getSource().sendFeedback(()-> Text.literal("ok"),false);
-				return 1;
-			}))))));
-		});
+        LOGGER.info("Hello Fabric world!");
 
 
+        CommandRegistrationCallback.EVENT.register((d, r, e) -> {
+            d.register(CommandManager.literal("draw")
+                    .then(CommandManager.literal("line")
+
+                            .then(CommandManager.argument("StartPosX", FloatArgumentType.floatArg())
+                                    .then(CommandManager.argument("StartPosY", FloatArgumentType.floatArg())
+                                            .then(CommandManager.argument("StartPosZ", FloatArgumentType.floatArg())
+                                                    .then(CommandManager.argument("EndX", FloatArgumentType.floatArg())
+                                                            .then(CommandManager.argument("EndY", FloatArgumentType.floatArg())
+                                                                    .then(CommandManager.argument("EndZ", FloatArgumentType.floatArg())
+                                                                            .then(CommandManager.argument("num", IntegerArgumentType.integer())
+                                                                                    .then(CommandManager.argument("type", StringArgumentType.string()))
+                                                                                    .executes(ctx -> {
+
+                                                                                        float x = FloatArgumentType.getFloat(ctx, "StartPosX");
+                                                                                        float y = FloatArgumentType.getFloat(ctx, "StartPosY");
+                                                                                        float z = FloatArgumentType.getFloat(ctx, "StartPosZ");
+                                                                                        float x1 = FloatArgumentType.getFloat(ctx, "EndX");
+                                                                                        float y1 = FloatArgumentType.getFloat(ctx, "EndY");
+                                                                                        float z1 = FloatArgumentType.getFloat(ctx, "EndZ");
+                                                                                        int num = IntegerArgumentType.getInteger(ctx, "num");
+                                                                                        String s = StringArgumentType.getString(ctx, "type");
+
+                                                                                        String c = DrawLine(x, y, z, x1, y1, z1, num, s);
+                                                                                        ExecuteMultiLineAsync(c, ctx.getSource(), 2);
+
+                                                                                        ctx.getSource().sendFeedback(() -> Text.literal("ok"), false);
+                                                                                        return 1;
+                                                                                    }))))))
+                                            .then(CommandManager.literal("circle")
+                                                    .then(CommandManager.argument("x", FloatArgumentType.floatArg())
+                                                            .then(CommandManager.argument("y", FloatArgumentType.floatArg())
+                                                                    .then(CommandManager.argument("z", FloatArgumentType.floatArg())
+                                                                            .then(CommandManager.argument("r", FloatArgumentType.floatArg())
+                                                                                    .then(CommandManager.argument("axisx", FloatArgumentType.floatArg())
+                                                                                            .then(CommandManager.argument("axisy", FloatArgumentType.floatArg())
+                                                                                                    .then(CommandManager.argument("axisz", FloatArgumentType.floatArg())
+                                                                                                            .then(CommandManager.argument("num", IntegerArgumentType.integer())
+                                                                                                                    .then(CommandManager.argument("type", StringArgumentType.string())
+                                                                                                                            .executes(ctx ->
+                                                                                                                            {
+                                                                                                                                float x = FloatArgumentType.getFloat(ctx, "x");
+                                                                                                                                float y = FloatArgumentType.getFloat(ctx, "y");
+                                                                                                                                float z = FloatArgumentType.getFloat(ctx, "z");
+                                                                                                                                float radius = FloatArgumentType.getFloat(ctx, "r");
+                                                                                                                                Vector3 vector3 = new Vector3(FloatArgumentType.getFloat(ctx, "axisx"), FloatArgumentType.getFloat(ctx, "axisy"), FloatArgumentType.getFloat(ctx, "axisz"));
+                                                                                                                                int num = IntegerArgumentType.getInteger(ctx, "num");
+                                                                                                                                String s = StringArgumentType.getString(ctx, "type");
+																																DrawCircle(x,y,z,radius,num,vector3,s);
 
 
+                                                                                                                                return 1;
+                                                                                                                            })))))))))))))));
 
-	}
-	public static String DrawLine(float x,float y, float z,float x1,float y1,float z1,int num){
+
+        });
+        }
+	public static String DrawLine(float x,float y, float z,float x1,float y1,float z1,int num,String type){
 		String res="";
 		Vector3 start = new Vector3(x,y,z);
 		Vector3 end = new Vector3(x1,y1,z1);
 		Vector3 delta =Vector3.div(Vector3.sub(end,start),num);
 		for(int i=0;i<num;i++){
 			Vector3 pos = Vector3.add(start,Vector3.mul(delta,i));
-			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(pos.x,pos.y,pos.z);
+			res+="particle "+type.trim()+" %s %s %s 0 0 0 0 1 force\n".formatted(pos.x,pos.y,pos.z);
 		}
 		return res;
 
 
 	}
 
-	public static String DrawCircle(float x,float y, float z,float r,int num,Vector3 N){
+	public static String DrawCircle(float x,float y, float z,float r,int num,Vector3 N,String type){
 		String res="";
 
 		Vector3 vv = new Vector3(0,-N.z,N.y);
@@ -93,7 +121,7 @@ public class ParticleUtils implements ModInitializer {
 		for (int i=0;i<num;i++){
 			Vector3 v = Vector3.rotate(vv,N,delta*i);
 
-			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(x+v.x,y+v.y,z+v.z);
+			res+="particle "+type.trim()+" %s %s %s 0 0 0 0 1 force\n".formatted(x+v.x,y+v.y,z+v.z);
 		}
 		return res;
 
@@ -116,8 +144,7 @@ public class ParticleUtils implements ModInitializer {
 		}
 		return res;*/
 	}
-
-	/*
+/*
 	public static String DrawBall(float x,float y, float z,float r,int num){
 		String res="";
 		float height = y-r;
@@ -126,8 +153,8 @@ public class ParticleUtils implements ModInitializer {
 
 		}
 
-	}*/
-
+	}
+*/
 
 	public static void ExecuteMultiLine(String str, ServerCommandSource source){
 		String[] lines = str.split("\n");
