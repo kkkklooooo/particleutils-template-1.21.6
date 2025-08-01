@@ -124,7 +124,7 @@ public class ParticleUtils implements ModInitializer {
 		vv=vv.Normalize();
 
 		vv=vv.Mul(r);
-		ParticleUtils.LOGGER.warn(vv.toString());
+		ParticleUtils.LOGGER.warn("dir:%s,axis:%s".formatted(vv,N));
 		for (int i=0;i<num;i++){
 			Vector3 v = Vector3.rotate(vv,N,delta*i);
 
