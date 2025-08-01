@@ -111,18 +111,24 @@ public class ParticleUtils implements ModInitializer {
 
 	public static String DrawCircle(float x,float y, float z,float r,int num,Vector3 N,String type){
 		String res="";
+		Vector3 vv = new Vector3(0,0,0);
 
-		Vector3 vv = new Vector3(0,-N.z,N.y);
+		if(N.z==0&&N.y==0){
+			vv = new Vector3(0,1,0);
+		}else {
+			vv = new Vector3(0, -N.z, N.y);
+		}
+		//vv=N;
 		float delta = (float) (2*Math.PI/num);
 
-		//vv=vv.Normalize();
+		vv=vv.Normalize();
 
 		vv=vv.Mul(r);
 		ParticleUtils.LOGGER.warn(vv.toString());
 		for (int i=0;i<num;i++){
 			Vector3 v = Vector3.rotate(vv,N,delta*i);
 
-			res+="particle "+type.trim()+" %s %s %s 0 0 0 0 1 force\n".formatted(x+v.x,y+v.y,z+v.z);
+			res+="particle minecraft:%s %s %s %s 0 0 0 0 1 force\n".formatted(type.trim(),0.01+x+v.x,0.01+y+v.y,0.01+z+v.z);
 		}
 		return res;
 

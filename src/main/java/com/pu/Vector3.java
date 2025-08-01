@@ -86,7 +86,7 @@ public class Vector3 {
 
 
         Vector3 term1 = v.Mul(cos);
-        Vector3 term2 = Vector3.cross(axis, v).Mul(sin);
+        Vector3 term2 = Vector3.cross(axis.Mul(sin), v);
         Vector3 term3 = axis.Mul(Vector3.dot(axis, v) * oneMinusCos);
 
         return term1.Add(term2).Add(term3);
