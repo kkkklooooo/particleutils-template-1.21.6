@@ -1,11 +1,15 @@
 package com.pu;
 
 public class Vector3 {
-    float x,y,z;
+    float x,y,z,l;
     Vector3(float x,float y,float z){
         this.x=x;
         this.y=y;
         this.z=z;
+        CalLength();
+    }
+    public void CalLength(){
+        this.l = (float)Math.sqrt(x*x+y*y+z*z);
     }
 
     public  Vector3 Sub(Vector3 b){
@@ -30,7 +34,7 @@ public class Vector3 {
         return new Vector3(x*s,y*s,z*s);
     }
     public Vector3 Normalize(){
-        return new Vector3(this.Div((float) Math.sqrt(x*x+y*y+z*z)).x,this.Div((float) Math.sqrt(x*x+y*y+z*z)).y,this.Div((float) Math.sqrt(x*x+y*y+z*z)).z);
+        return new Vector3(x/l,y/l,z/l);
     }
     public String toString(){
         return String.format("(%f,%f,%f)",x,y,z);
