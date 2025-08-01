@@ -49,10 +49,11 @@ public class ParticleUtils implements ModInitializer {
 						float y = FloatArgumentType.getFloat(ctx,"StartPosY");
 						float z = FloatArgumentType.getFloat(ctx,"StartPosZ");
 						float l = FloatArgumentType.getFloat(ctx,"Length");
-						ctx.getSource().getDispatcher().execute("tp %s %s %s".formatted(x,y,z),ctx.getSource());
+						//ctx.getSource().getDispatcher().execute("tp %s %s %s".formatted(x,y,z),ctx.getSource());
 						String c = DrawLine(100,100,100,0,0,0,1000);
-						c+=DrawCircle(0,0,0,5,1000);
-						ParticleUtils.LOGGER.warn(c);
+						//ParticleUtils.LOGGER.warn(c);
+						c+=DrawCircle(1,1,1,5,1000,new Vector3(0,0,1));
+						//ParticleUtils.LOGGER.warn(c);
 						ExecuteMultiLineAsync(c,ctx.getSource(),2);
 
 				ctx.getSource().sendFeedback(()-> Text.literal("ok"),false);
@@ -79,25 +80,44 @@ public class ParticleUtils implements ModInitializer {
 
 	}
 
-	public static String DrawCircle(float x,float y, float z,float r,int num,Vector3 axis ,float degree){
+	public static String DrawCircle(float x,float y, float z,float r,int num,Vector3 N){
 		String res="";
+
+		Vector3 vv = new Vector3(0,-N.z,N.y);
+		float delta = (float) (2*Math.PI/num);
+
+		//vv=vv.Normalize();
+
+		vv=vv.Mul(r);
+		ParticleUtils.LOGGER.warn(vv.toString());
+		for (int i=0;i<num;i++){
+			Vector3 v = Vector3.rotate(vv,N,delta*i);
+
+			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(x+v.x,y+v.y,z+v.z);
+		}
+		return res;
+
+	/*
 		double angle = 8*Math.PI/num;
 		if(r==0){
 			return "particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(x,y,z);
 		}
 		for(int i=0;i<num/4;i++){
 			double a = angle*i;
-			float x1 = (float) (x+r*Math.cos(a));
-			float z1 = (float) (z+r*Math.sin(a));
+			Vector3 v= new Vector3((float) (x+r*Math.cos(a)),0,(float) (z+r*Math.sin(a)));
+			v=Vector3.rotate(v,axis,rad);
+			float x1 = v.x;
+			float z1 = v.z;
 			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(x1,y,z1);
 			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(-x1,y,z1);
 			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(-x1,y,-z1);
 			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(x1,y,-z1);
 
 		}
-		return res;
+		return res;*/
 	}
 
+	/*
 	public static String DrawBall(float x,float y, float z,float r,int num){
 		String res="";
 		float height = y-r;
@@ -106,7 +126,7 @@ public class ParticleUtils implements ModInitializer {
 
 		}
 
-	}
+	}*/
 
 
 	public static void ExecuteMultiLine(String str, ServerCommandSource source){

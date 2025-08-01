@@ -8,6 +8,37 @@ public class Vector3 {
         this.z=z;
     }
 
+    public  Vector3 Sub(Vector3 b){
+        return new Vector3(x-b.x,y-b.y,z-b.z);
+    }
+    public  Vector3 Div(float s){
+        if(s==0){
+            throw new ArithmeticException("Division by zero");
+        }
+        return new Vector3(x/s,y/s,z/s);
+    }
+    public  Vector3 Add(Vector3... a){
+        float x = this.x,y=this.y,z=this.z;
+        for (Vector3 v : a) {
+            x+=v.x;
+            y+=v.y;
+            z+=v.z;
+        }
+        return new Vector3(x,y,z);
+    }
+    public  Vector3 Mul(float s){
+        return new Vector3(x*s,y*s,z*s);
+    }
+    public Vector3 Normalize(){
+        return new Vector3(this.Div((float) Math.sqrt(x*x+y*y+z*z)).x,this.Div((float) Math.sqrt(x*x+y*y+z*z)).y,this.Div((float) Math.sqrt(x*x+y*y+z*z)).z);
+    }
+    public String toString(){
+        return String.format("(%f,%f,%f)",x,y,z);
+    }
+
+
+
+
 
 
 
@@ -20,19 +51,26 @@ public class Vector3 {
         }
         return new Vector3(v.x/s,v.y/s,v.z/s);
     }
-    public static Vector3 add(Vector3 a,Vector3 b){
-        return new Vector3(a.x+b.x,a.y+b.y,a.z+b.z);
+    public static Vector3 add(Vector3... a){
+        float x = 0,y=0,z=0;
+        for (Vector3 v : a) {
+            x+=v.x;
+            y+=v.y;
+            z+=v.z;
+        }
+        return new Vector3(x,y,z);
     }
     public static Vector3 mul(Vector3 a,float s){
         return new Vector3(a.x*s,a.y*s,a.z*s);
     }
-    public Vector3 cross(Vector3 a,Vector3 b){
+    public static Vector3 cross(Vector3 a,Vector3 b){
         return new Vector3(a.x*b.y-a.y*b.x,a.z*b.x-a.x*b.z,a.y*b.z-a.z*b.y);
     }
 
     public static Vector3 rotate(Vector3 v,Vector3 axis,float rad){
         float sin = (float) Math.sin(rad);
         float cos = (float) Math.cos(rad);
-        return
+        return v.Add(Vector3.cross(axis.Mul(sin),v),Vector3.cross(axis.Mul(1-cos),Vector3.cross(axis,v)));
     }
+
 }
