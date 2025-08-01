@@ -114,12 +114,12 @@ public class ParticleUtils implements ModInitializer {
 
 	public static String DrawCircle(float x,float y, float z,float r,int num,Vector3 N,String type){
 		String res="";
-		Vector3 vv = new Vector3(0,0,0);
+		Vector3 vv;
 
 		if(N.z==0&&N.y==0){
 			vv = new Vector3(0,1,0);
 		}else {
-			vv = new Vector3(0, -N.z, N.y);
+			vv = new Vector3(0, N.z, N.y);
 		}
 		//vv=N;
 		float delta = (float) (2*Math.PI/num);
@@ -165,7 +165,6 @@ public class ParticleUtils implements ModInitializer {
 
 	}
 */
-
 	public static void ExecuteMultiLine(String str, ServerCommandSource source){
 		String[] lines = str.split("\n");
 		for(String line:lines){
