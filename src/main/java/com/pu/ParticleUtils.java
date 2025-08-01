@@ -79,9 +79,12 @@ public class ParticleUtils implements ModInitializer {
 
 	}
 
-	public static String DrawCircle(float x,float y, float z,float r,int num){
+	public static String DrawCircle(float x,float y, float z,float r,int num,Vector3 axis ,float degree){
 		String res="";
 		double angle = 8*Math.PI/num;
+		if(r==0){
+			return "particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(x,y,z);
+		}
 		for(int i=0;i<num/4;i++){
 			double a = angle*i;
 			float x1 = (float) (x+r*Math.cos(a));
@@ -90,8 +93,19 @@ public class ParticleUtils implements ModInitializer {
 			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(-x1,y,z1);
 			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(-x1,y,-z1);
 			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(x1,y,-z1);
+
 		}
 		return res;
+	}
+
+	public static String DrawBall(float x,float y, float z,float r,int num){
+		String res="";
+		float height = y-r;
+		float delta = r*2/num;
+		for(int i=0;i<num;i++){
+
+		}
+
 	}
 
 

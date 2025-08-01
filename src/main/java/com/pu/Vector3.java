@@ -8,6 +8,9 @@ public class Vector3 {
         this.z=z;
     }
 
+
+
+
     public static Vector3 sub(Vector3 a,Vector3 b){
         return new Vector3(a.x-b.x,a.y-b.y,a.z-b.z);
     }
@@ -22,5 +25,14 @@ public class Vector3 {
     }
     public static Vector3 mul(Vector3 a,float s){
         return new Vector3(a.x*s,a.y*s,a.z*s);
+    }
+    public Vector3 cross(Vector3 a,Vector3 b){
+        return new Vector3(a.x*b.y-a.y*b.x,a.z*b.x-a.x*b.z,a.y*b.z-a.z*b.y);
+    }
+
+    public static Vector3 rotate(Vector3 v,Vector3 axis,float rad){
+        float sin = (float) Math.sin(rad);
+        float cos = (float) Math.cos(rad);
+        return
     }
 }
