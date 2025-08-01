@@ -48,7 +48,7 @@ public class ParticleUtils implements ModInitializer {
                                                             .then(CommandManager.argument("EndY", FloatArgumentType.floatArg())
                                                                     .then(CommandManager.argument("EndZ", FloatArgumentType.floatArg())
                                                                             .then(CommandManager.argument("num", IntegerArgumentType.integer())
-                                                                                    .then(CommandManager.argument("type", StringArgumentType.string()))
+                                                                                    .then(CommandManager.argument("type", StringArgumentType.string())
                                                                                     .executes(ctx -> {
 
                                                                                         float x = FloatArgumentType.getFloat(ctx, "StartPosX");
@@ -65,7 +65,7 @@ public class ParticleUtils implements ModInitializer {
 
                                                                                         ctx.getSource().sendFeedback(() -> Text.literal("ok"), false);
                                                                                         return 1;
-                                                                                    }))))))
+                                                                                    }))))))))))
                                             .then(CommandManager.literal("circle")
                                                     .then(CommandManager.argument("x", FloatArgumentType.floatArg())
                                                             .then(CommandManager.argument("y", FloatArgumentType.floatArg())
@@ -85,11 +85,12 @@ public class ParticleUtils implements ModInitializer {
                                                                                                                                 Vector3 vector3 = new Vector3(FloatArgumentType.getFloat(ctx, "axisx"), FloatArgumentType.getFloat(ctx, "axisy"), FloatArgumentType.getFloat(ctx, "axisz"));
                                                                                                                                 int num = IntegerArgumentType.getInteger(ctx, "num");
                                                                                                                                 String s = StringArgumentType.getString(ctx, "type");
-																																DrawCircle(x,y,z,radius,num,vector3,s);
+																																String c=DrawCircle(x,y,z,radius,num,vector3,s);
+																																ExecuteMultiLineAsync(c, ctx.getSource(), 2);
 
-
-                                                                                                                                return 1;
-                                                                                                                            })))))))))))))));
+																																ctx.getSource().sendFeedback(() -> Text.literal("ok"), false);
+																																return 1;
+                                                                                                                            }))))))))))));
 
 
         });
