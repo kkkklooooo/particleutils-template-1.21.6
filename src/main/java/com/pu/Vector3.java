@@ -66,11 +66,26 @@ public class Vector3 {
     public static Vector3 cross(Vector3 a,Vector3 b){
         return new Vector3(a.x*b.y-a.y*b.x,a.z*b.x-a.x*b.z,a.y*b.z-a.z*b.y);
     }
-
+    public static float dot(Vector3 a, Vector3 b){
+        return a.x*b.x+a.y*b.y+a.z*b.z;
+    }
+    /*
     public static Vector3 rotate(Vector3 v,Vector3 axis,float rad){
         float sin = (float) Math.sin(rad);
         float cos = (float) Math.cos(rad);
         return v.Add(Vector3.cross(axis.Mul(sin),v),Vector3.cross(axis.Mul(1-cos),Vector3.cross(axis,v)));
+    }*/
+    public static Vector3 rotate(Vector3 v, Vector3 axis, float rad){
+        float sin = (float) Math.sin(rad);
+        float cos = (float) Math.cos(rad);
+        float oneMinusCos = 1 - cos;
+
+
+        Vector3 term1 = v.Mul(cos);
+        Vector3 term2 = Vector3.cross(axis, v).Mul(sin);
+        Vector3 term3 = axis.Mul(Vector3.dot(axis, v) * oneMinusCos);
+
+        return term1.Add(term2).Add(term3);
     }
 
 }
