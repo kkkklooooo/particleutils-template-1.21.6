@@ -38,18 +38,18 @@ public class ParticleUtils implements ModInitializer {
 
 		CommandRegistrationCallback.EVENT.register((d,r,e)->{
 			d.register(CommandManager.literal("line")
-					/*
-							.then(CommandManager.argument("StartPosX", FloatArgumentType.floatArg()))
-					.then(CommandManager.argument("StartPosY", FloatArgumentType.floatArg()))
-					.then(CommandManager.argument("StartPosZ", FloatArgumentType.floatArg()))
-							.then(CommandManager.argument("Length",FloatArgumentType.floatArg()))*/
+
+							.then(CommandManager.argument("StartPosX", FloatArgumentType.floatArg())
+					.then(CommandManager.argument("StartPosY", FloatArgumentType.floatArg())
+					.then(CommandManager.argument("StartPosZ", FloatArgumentType.floatArg())
+							.then(CommandManager.argument("Length",FloatArgumentType.floatArg())
 					.executes(ctx->{
-						/*
+
 						float x = FloatArgumentType.getFloat(ctx,"StartPosX");
 						float y = FloatArgumentType.getFloat(ctx,"StartPosY");
 						float z = FloatArgumentType.getFloat(ctx,"StartPosZ");
 						float l = FloatArgumentType.getFloat(ctx,"Length");
-						ctx.getSource().getDispatcher().execute("tp %s %s %s".formatted(x,y,z),ctx.getSource());*/
+						ctx.getSource().getDispatcher().execute("tp %s %s %s".formatted(x,y,z),ctx.getSource());
 						String c = DrawLine(100,100,100,0,0,0,1000);
 						c+=DrawCircle(0,0,0,5,1000);
 						ParticleUtils.LOGGER.warn(c);
@@ -57,7 +57,7 @@ public class ParticleUtils implements ModInitializer {
 
 				ctx.getSource().sendFeedback(()-> Text.literal("ok"),false);
 				return 1;
-			}));
+			}))))));
 		});
 
 
@@ -81,12 +81,15 @@ public class ParticleUtils implements ModInitializer {
 
 	public static String DrawCircle(float x,float y, float z,float r,int num){
 		String res="";
-		double angle = 2*Math.PI/num;
-		for(int i=0;i<num;i++){
+		double angle = 8*Math.PI/num;
+		for(int i=0;i<num/4;i++){
 			double a = angle*i;
 			float x1 = (float) (x+r*Math.cos(a));
 			float z1 = (float) (z+r*Math.sin(a));
 			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(x1,y,z1);
+			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(-x1,y,z1);
+			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(-x1,y,-z1);
+			res+="particle minecraft:end_rod %s %s %s 0 0 0 0 1 force\n".formatted(x1,y,-z1);
 		}
 		return res;
 	}
