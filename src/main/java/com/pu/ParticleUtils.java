@@ -89,11 +89,24 @@ public class ParticleUtils implements ModInitializer {
                                                                                                                                 int num = IntegerArgumentType.getInteger(ctx, "num");
                                                                                                                                 String s = StringArgumentType.getString(ctx, "type");
 																																String c=DrawCircle(x,y,z,radius,num,vector3,s);
+																																//String c = DrawBall(x, y, z, radius, num,s);
 																																ExecuteMultiLineAsync(c, ctx.getSource(), 2);
 
 																																ctx.getSource().sendFeedback(() -> Text.literal("ok"), false);
 																																return 1;
-                                                                                                                            }))))))))))));
+                                                                                                                            })
+																													)
+																											)
+																									)
+																							)
+																					)
+																			)
+																	)
+															)
+													)
+											)
+
+			);
 
 
         });
@@ -129,7 +142,7 @@ public class ParticleUtils implements ModInitializer {
 		vv=vv.Mul(r);
 		ParticleUtils.LOGGER.warn("dir:%s,axis:%s".formatted(vv,N));
 		for (int i=0;i<num;i++){
-			Vector3 v = Vector3.rotate(vv,N,delta*i);
+			Vector3 v = Vector3.rotate(vv,N.Normalize(),delta*i);
 
 			res+="particle minecraft:%s %s %s %s 0 0 0 0 1 force\n".formatted(type.trim(),0.01+x+v.x,0.01+y+v.y,0.01+z+v.z);
 		}
@@ -154,17 +167,19 @@ public class ParticleUtils implements ModInitializer {
 		}
 		return res;*/
 	}
-/*
-	public static String DrawBall(float x,float y, float z,float r,int num){
+
+	public static String DrawBall(float x,float y, float z,float r,int num,String type){
 		String res="";
 		float height = y-r;
 		float delta = r*2/num;
+
 		for(int i=0;i<num;i++){
-
+			float radius = (float) Math.sqrt(r*r-(-r+delta*i)*(-r+delta*i));
+			res+=DrawCircle(x,height+delta*i,z,radius,num,new Vector3(0,1,0),type);
 		}
-
+		return res;
 	}
-*/
+
 	public static void ExecuteMultiLine(String str, ServerCommandSource source){
 		String[] lines = str.split("\n");
 		for(String line:lines){
