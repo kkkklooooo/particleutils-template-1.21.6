@@ -104,9 +104,48 @@ public class ParticleUtils implements ModInitializer {
 																	)
 															)
 													)
-											)
+											).then(
+							CommandManager.literal("rings")
+									.then(CommandManager.argument("x",FloatArgumentType.floatArg())
+									.then(CommandManager.argument("y",FloatArgumentType.floatArg())
+											.then(CommandManager.argument("z",FloatArgumentType.floatArg())
+											.then(CommandManager.argument("rMax",FloatArgumentType.floatArg())
+															.then(CommandManager.argument("rMin",FloatArgumentType.floatArg())
+																	.then(CommandManager.argument("axisx",FloatArgumentType.floatArg())
+																			.then(CommandManager.argument("axisy",FloatArgumentType.floatArg())
+																					.then(CommandManager.argument("axisz",FloatArgumentType.floatArg())
+																							.then(CommandManager.argument("numRings",IntegerArgumentType.integer())
+																									.then(CommandManager.argument("circleDivNum",IntegerArgumentType.integer())
+																											.then(CommandManager.argument("type",StringArgumentType.string())
+																													.executes(ctx -> {
+																														float x = FloatArgumentType.getFloat(ctx, "x");
+																														float y = FloatArgumentType.getFloat(ctx, "y");
+																														float z = FloatArgumentType.getFloat(ctx, "z");
+																														float rMax = FloatArgumentType.getFloat(ctx, "rMax");
+																														float rMin = FloatArgumentType.getFloat(ctx, "rMin");
+																														Vector3 vector3 = new Vector3(FloatArgumentType.getFloat(ctx, "axisx"), FloatArgumentType.getFloat(ctx, "axisy"), FloatArgumentType.getFloat(ctx, "axisz"));
+																														int numRings = IntegerArgumentType.getInteger(ctx, "numRings");
+																														int circleDivNum = IntegerArgumentType.getInteger(ctx, "circleDivNum");
+																														String s = StringArgumentType.getString(ctx, "type");
 
-			);
+																														String c=DrawRings(x,y,z,rMax,rMin,vector3,numRings,circleDivNum,s);
+																														ExecuteMultiLineAsync(c, ctx.getSource(), 2);
+
+																														ctx.getSource().sendFeedback(() -> Text.literal("ok"), false);
+																														return 1;
+																													})
+																											)
+																									)
+																					)
+																			)
+																		)
+																)
+															)
+													))
+									)
+					)
+
+					)		);
 
 
         });
