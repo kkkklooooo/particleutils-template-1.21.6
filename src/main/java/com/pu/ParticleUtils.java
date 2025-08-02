@@ -180,6 +180,16 @@ public class ParticleUtils implements ModInitializer {
 		return res;
 	}
 
+	public static String DrawRings(float x, float y,float z,float rMax,float rMin,int numRings,int circleDivNum,Vector3 N,String type){
+		String res="";
+		float delta = (rMax-rMin)/numRings;
+		for(int i=0;i<numRings;i++){
+			float r = rMin+delta*i;
+			res+=DrawCircle(x,y,z,r,circleDivNum,N,type);
+		}
+		return res;
+	}
+
 	public static void ExecuteMultiLine(String str, ServerCommandSource source){
 		String[] lines = str.split("\n");
 		for(String line:lines){
