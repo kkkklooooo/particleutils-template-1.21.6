@@ -180,7 +180,7 @@ public class ParticleUtils implements ModInitializer {
 		return res;
 	}
 
-	public static String DrawRings(float x, float y,float z,float rMax,float rMin,int numRings,int circleDivNum,Vector3 N,String type){
+	public static String DrawRings(float x, float y,float z,float rMax,float rMin,Vector3 N,int numRings,int circleDivNum,String type){
 		String res="";
 		float delta = (rMax-rMin)/numRings;
 		for(int i=0;i<numRings;i++){
