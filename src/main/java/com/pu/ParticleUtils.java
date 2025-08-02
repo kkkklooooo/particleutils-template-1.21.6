@@ -4,13 +4,19 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.datafixers.types.templates.Tag;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.argument.ColumnPosArgumentType;
 import net.minecraft.command.argument.PosArgument;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.command.TagCommand;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColumnPos;
 import net.minecraft.util.math.Vec3d;
@@ -43,7 +49,6 @@ public class ParticleUtils implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((d, r, e) -> {
             d.register(CommandManager.literal("draw")
                     .then(CommandManager.literal("line")
-
                             .then(CommandManager.argument("StartPosX", FloatArgumentType.floatArg())
                                     .then(CommandManager.argument("StartPosY", FloatArgumentType.floatArg())
                                             .then(CommandManager.argument("StartPosZ", FloatArgumentType.floatArg())
@@ -104,7 +109,30 @@ public class ParticleUtils implements ModInitializer {
 																	)
 															)
 													)
-											).then(
+											)
+					.then(CommandManager.literal("Ball")
+							.then(CommandManager.argument("x",FloatArgumentType.floatArg())
+									.then(CommandManager.argument("y",FloatArgumentType.floatArg())
+											.then(CommandManager.argument("z",FloatArgumentType.floatArg())
+													.then(CommandManager.argument("r",FloatArgumentType.floatArg())
+															.then(CommandManager.argument("num",IntegerArgumentType.integer())
+																	.then(CommandManager.argument("type",StringArgumentType.string())
+																			.executes(ctx->
+																			{
+																				float x = FloatArgumentType.getFloat(ctx, "x");
+																				float y = FloatArgumentType.getFloat(ctx, "y");
+																				float z = FloatArgumentType.getFloat(ctx, "z");
+																				float radius = FloatArgumentType.getFloat(ctx, "r");
+																				int num = IntegerArgumentType.getInteger(ctx, "num");
+																				String s = StringArgumentType.getString(ctx, "type");
+																				String c=DrawBall(x,y,z,radius,num,s);
+																				ExecuteMultiLineAsync(c, ctx.getSource(), 2);
+
+																				ctx.getSource().sendFeedback(() -> Text.literal("ok"), false);
+																				return 1;
+																			}))))))))
+
+                    .then(
 							CommandManager.literal("rings")
 									.then(CommandManager.argument("x",FloatArgumentType.floatArg())
 									.then(CommandManager.argument("y",FloatArgumentType.floatArg())
@@ -171,12 +199,13 @@ public class ParticleUtils implements ModInitializer {
 		if(N.z==0&&N.y==0){
 			vv = new Vector3(0,1,0);
 		}else {
-			vv = new Vector3(0, N.z, N.y);
+			vv = new Vector3(0, -N.z, -N.y);
 		}
 		//vv=N;
 		float delta = (float) (2*Math.PI/num);
 
 		vv=vv.Normalize();
+		N=N.Normalize();
 
 		vv=vv.Mul(r);
 		ParticleUtils.LOGGER.warn("dir:%s,axis:%s".formatted(vv,N));
@@ -210,11 +239,11 @@ public class ParticleUtils implements ModInitializer {
 	public static String DrawBall(float x,float y, float z,float r,int num,String type){
 		String res="";
 		float height = y-r;
-		float delta = r*2/num;
+		float delta = r*2/((int) Math.round(Math.sqrt(num))+4);
 
-		for(int i=0;i<num;i++){
+		for(int i=0;i<=(int) Math.round(Math.sqrt(num))+4;i++){
 			float radius = (float) Math.sqrt(r*r-(-r+delta*i)*(-r+delta*i));
-			res+=DrawCircle(x,height+delta*i,z,radius,num,new Vector3(0,1,0),type);
+			res+=DrawCircle(x,height+delta*i,z,radius, ((int) Math.round(Math.sqrt(num)))+4,new Vector3(0,1,0),type);
 		}
 		return res;
 	}

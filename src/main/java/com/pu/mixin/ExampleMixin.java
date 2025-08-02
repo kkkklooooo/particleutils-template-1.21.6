@@ -1,15 +1,27 @@
 package com.pu.mixin;
 
+import com.fasterxml.jackson.core.TreeNode;
+import com.google.common.collect.Sets;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MinecraftServer.class)
+import java.util.Set;
+
+@Mixin(Entity.class)
 public class ExampleMixin {
-	@Inject(at = @At("HEAD"), method = "loadWorld")
-	private void init(CallbackInfo info) {
-		// This code is injected into the start of MinecraftServer.loadWorld()V
+	@Shadow private final Set<String> commandTags = Sets.newHashSet();
+	/**
+	 * @author
+	 * @reason
+	 */
+	@Overwrite
+	public boolean addCommandTag(String tag) {
+		return this.commandTags.size() >= 1024 ? false : this.commandTags.add(tag);
 	}
 }

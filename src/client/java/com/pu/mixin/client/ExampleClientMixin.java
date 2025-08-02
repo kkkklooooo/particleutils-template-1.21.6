@@ -12,8 +12,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ExampleClientMixin {
 	@Shadow protected int age;
 
-	@Inject(at = @At("TAIL"), method = "tick")
+	@Shadow protected float gravityStrength;
+
+	@Inject(at = @At("HEAD"), method = "tick")
 	private void init(CallbackInfo info) {
+		if(gravityStrength!=0)
+		{
+			gravityStrength=0;
+		}
 		age=0;
 		// This code is injected into the start of MinecraftClient.run()V
 	}
