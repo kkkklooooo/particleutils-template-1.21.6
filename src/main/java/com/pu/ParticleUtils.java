@@ -4,13 +4,19 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.datafixers.types.templates.Tag;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.argument.ColumnPosArgumentType;
 import net.minecraft.command.argument.PosArgument;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.command.TagCommand;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColumnPos;
 import net.minecraft.util.math.Vec3d;
@@ -171,12 +177,13 @@ public class ParticleUtils implements ModInitializer {
 		if(N.z==0&&N.y==0){
 			vv = new Vector3(0,1,0);
 		}else {
-			vv = new Vector3(0, N.z, N.y);
+			vv = new Vector3(0, -N.z, -N.y);
 		}
 		//vv=N;
 		float delta = (float) (2*Math.PI/num);
 
 		vv=vv.Normalize();
+		N=N.Normalize();
 
 		vv=vv.Mul(r);
 		ParticleUtils.LOGGER.warn("dir:%s,axis:%s".formatted(vv,N));
