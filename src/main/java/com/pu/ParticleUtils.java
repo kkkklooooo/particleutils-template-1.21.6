@@ -224,7 +224,7 @@ public class ParticleUtils implements ModInitializer {
 		float delta = (rMax-rMin)/numRings;
 		for(int i=0;i<numRings;i++){
 			float r = rMin+delta*i;
-			res+=DrawCircle(x,y,z,r,circleDivNum,N,type);
+			res+=DrawCircle(x,y,z,r, (int) (circleDivNum+20*delta*i),N,type);
 		}
 		return res;
 	}
